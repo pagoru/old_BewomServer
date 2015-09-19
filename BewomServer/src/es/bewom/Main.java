@@ -78,11 +78,19 @@ public class Main {
 				String[] runRam = {"sh", "ram.sh"};
 				Process pRam = Runtime.getRuntime().exec(runRam);
 				BufferedReader stdInputRam = new BufferedReader(new InputStreamReader(pRam.getInputStream()));
+				
 				String[] runCpu = {"sh", "cpu.sh"};
 				Process pCpu = Runtime.getRuntime().exec(runCpu);
 				BufferedReader stdInputCpu = new BufferedReader(new InputStreamReader(pCpu.getInputStream()));
 				
 				m.executeQuery("INSERT INTO `serverUsage`(`cpuUsage`, `ramUsage`) VALUES ('" + stdInputCpu.readLine().replace(".", ",") + "', '" + stdInputRam.readLine().replace(".", ",") + "')", null);
+				
+				stdInputCpu.close();
+				stdInputRam.close();
+				
+				pCpu.destroy();
+				pRam.destroy();
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
