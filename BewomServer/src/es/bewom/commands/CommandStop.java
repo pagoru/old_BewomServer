@@ -1,6 +1,6 @@
 package es.bewom.commands;
 
-import es.bewom.BewomServer;
+import es.bewom.Main;
 import es.bewom.Server;
 import es.bewom.util.CommandBase;
 import es.bewom.util.Datetime;
@@ -14,8 +14,8 @@ public class CommandStop extends CommandBase {
 	
 	@Override
 	public void execute(){
-		if(BewomServer.isStart){
-			BewomServer.isStart = false;
+		if(Main.isStart){
+			Main.isStart = false;
 			Server.stop();
 			System.out.println(Datetime.get() + "Secuencia de servidor parada.");
 		} else {

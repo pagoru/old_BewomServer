@@ -1,6 +1,6 @@
 package es.bewom.commands;
 
-import es.bewom.BewomServer;
+import es.bewom.Main;
 import es.bewom.util.CommandBase;
 
 public class CommandExit extends CommandBase {
@@ -12,8 +12,8 @@ public class CommandExit extends CommandBase {
 	
 	@Override
 	public void execute(){
-		BewomServer.serverOn = false;
-		BewomServer.ct.interrupt();
+		Main.serverOn = false;
+		Main.ct.interrupt();
 	}
 	
 }

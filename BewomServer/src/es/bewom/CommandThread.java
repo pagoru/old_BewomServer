@@ -1,6 +1,6 @@
 package es.bewom;
 
-import static es.bewom.BewomServer.*;
+import static es.bewom.Main.*;
 
 import es.bewom.commands.Commands;
 import es.bewom.util.Command;
@@ -11,7 +11,7 @@ public class CommandThread extends Thread {
 	@Override
 	public void run() {
 		
-		while((nextLine = input.nextLine()) != null && BewomServer.serverOn){
+		while((nextLine = input.nextLine()) != null && serverOn){
 			if(!lastNextLine.equals(nextLine)){
 				for(Command c : Commands.getCommands()){
 					if(c.getCommandName().equals(nextLine)){

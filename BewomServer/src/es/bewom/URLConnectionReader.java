@@ -23,7 +23,7 @@ public class URLConnectionReader {
 	            response.append(inputLine);
 	
 	        in.close();
-	
+
 	        return response.toString();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
