@@ -3,7 +3,9 @@ package es.bewom;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 import es.bewom.commands.CommandStart;
@@ -42,19 +44,52 @@ public class Main {
 		System.out.println(Datetime.get() + "Bienvenido!");
 		Server.stop();
 		while(serverOn){
-			long neoDate = new Date().getTime()/1000;
 				
 			if(!serverOn){
 				break;
 			}
-			if(neoDate != date){
-				run();
-				updateUsage();
-				date = neoDate;
-			}
+			run();
+			updateUsage();
+			try {
+				Thread.currentThread().sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			};
 		}
 	}
 	
+	public static List<String> pidofMinecraft() {
+		List<String> ls = new ArrayList<String>();
+		try {
+			String[] run = {"sh", "screenlist_minecraft.sh"};
+			Process p = Runtime.getRuntime().exec(run);
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			
+			while(true){
+				final String line = stdInput.readLine();
+				if(line == null){
+					break;
+				}
+				ls.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return ls;		
+	}
+	
+	public static String pidofServer() {
+		try {
+			String[] run = {"sh", "screenlist_minecraft.sh"};
+			Process p = Runtime.getRuntime().exec(run);
+			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			return stdInput.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;		
+	}
+
 	public static void run(){
 		if(canStart()){
 			if(!isServerOn()){
@@ -63,6 +98,7 @@ public class Main {
 					if(0 != Server.lastStart){
 						System.out.println(Datetime.get() + "¿Servidor caído?");
 					}
+					Server.stop();
 					Server.start();
 				}
 				long i = Server.lastStart - (neoDate - ping);

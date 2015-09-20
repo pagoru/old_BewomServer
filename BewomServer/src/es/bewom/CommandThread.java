@@ -24,6 +24,11 @@ public class CommandThread extends Thread {
 				}
 				lastNextLine = nextLine;
 			}
+			try {
+				CommandThread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}

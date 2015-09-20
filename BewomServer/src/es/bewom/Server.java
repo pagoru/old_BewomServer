@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.List;
 
 import es.bewom.util.Datetime;
 
@@ -13,7 +14,7 @@ public class Server {
 	
 	private static final String screen = "minecraft";
 	private static final String port = "25565";
-	
+		
 	public static void start(){
 		lastStart = new Date().getTime()/1000;
 		try {
@@ -30,13 +31,15 @@ public class Server {
 		System.out.println(Datetime.get() + "Servidor arrancado.");
 	}
 	public static void stop(){
-		try {
-			String[] run = {"sh", "killport", port};
-			Runtime.getRuntime().exec(run);
-			String[] run2 = {"screen", "-X", "-S", screen, "kill"};
-			Runtime.getRuntime().exec(run2);
-		} catch (IOException e) {
-			e.printStackTrace();
+		List<String> pid = Main.pidofMinecraft();
+		for (int i = 0; i < pid.size(); i++) {
+			try {
+				String[] run = {"kill", "-9", pid.get(i)};
+				Runtime.getRuntime().exec(run);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println(Datetime.get() + "Proceso de java terminado: " + pid.get(i));
 		}
 		System.out.println(Datetime.get() + "Servidor parado.");
 	}
