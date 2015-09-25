@@ -3,6 +3,7 @@ package es.bewom;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +35,7 @@ public class Main {
 	
 	public static int ping = 90;
 	
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
 		
 		Commands.registerCommand(new CommandExit());
@@ -108,7 +110,28 @@ public class Main {
 	}
 	
 	private static int everyMinute = 60;
+	private static int everyDay = 86400;	
+	
 	private static void updateUsage() {
+		
+		if(everyDay == 86400){
+			
+			Date date = new Date();
+			Timestamp d = new Timestamp(date.getTime());
+
+			try {
+				System.out.println(Datetime.get() + "Backup " + d.toString());
+				String[] runRam = {"cp", "-R", "/home/server", "/home/backup/" + d.toString()};
+				Process pRam = Runtime.getRuntime().exec(runRam);
+				pRam.getInputStream();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			everyDay = 0;
+		}
+		everyDay++;
+		
 		if(everyMinute == 60){
 			try {
 				String[] runRam = {"sh", "ram.sh"};

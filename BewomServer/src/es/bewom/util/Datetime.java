@@ -1,13 +1,14 @@
 package es.bewom.util;
 
-import java.util.Calendar;
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class Datetime {
 
 	public static String get(){
-		Calendar d = Calendar.getInstance();
-		return "[" + d.get(Calendar.DAY_OF_MONTH) + "/" + d.get(Calendar.MONTH) + "/" + d.get(Calendar.YEAR) + " " 
-				+ d.get(Calendar.HOUR) + ":" + d.get(Calendar.MINUTE) + ":" + d.get(Calendar.SECOND) + "] ";
+		Date date = new Date();
+		Timestamp d = new Timestamp(date.getTime());
+		return "[" + d.toString().substring(0, d.toString().length() - 4).replace("-", "/") + "] ";
 	}
 	
 }

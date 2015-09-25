@@ -13,12 +13,11 @@ public class Server {
 	public static long lastStart = 0;
 	
 	private static final String screen = "minecraft";
-	private static final String port = "25565";
 		
 	public static void start(){
 		lastStart = new Date().getTime()/1000;
 		try {
-			String[] run = {"sudo", "screen", "-dmS", screen, "java", "-jar", "server.jar"};
+			String[] run = {"sudo", "screen", "-dmS", screen, "java", "-jar", "/server/server.jar"};
 			Process p = Runtime.getRuntime().exec(run);
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -34,7 +33,7 @@ public class Server {
 		List<String> pid = Main.pidofMinecraft();
 		for (int i = 0; i < pid.size(); i++) {
 			try {
-				String[] run = {"kill", "-9", pid.get(i)};
+				String[] run = {"sudo", "kill", "-SIGTERM", pid.get(i)};
 				Runtime.getRuntime().exec(run);
 			} catch (IOException e) {
 				e.printStackTrace();
