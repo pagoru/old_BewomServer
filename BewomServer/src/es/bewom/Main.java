@@ -11,7 +11,9 @@ import java.util.Scanner;
 
 import es.bewom.commands.CommandStart;
 import es.bewom.commands.CommandStop;
+import es.bewom.commands.CommandBack;
 import es.bewom.commands.CommandExit;
+import es.bewom.commands.CommandFree;
 import es.bewom.commands.Commands;
 import es.bewom.util.Datetime;
 import es.bewom.util.mysql.MySQL;
@@ -41,6 +43,10 @@ public class Main {
 		Commands.registerCommand(new CommandExit());
 		Commands.registerCommand(new CommandStart());
 		Commands.registerCommand(new CommandStop());
+		Commands.registerCommand(new CommandFree());
+		Commands.registerCommand(new CommandBack());
+		
+		System.gc();
 		
 		ct.start();
 		System.out.println(Datetime.get() + "Bienvenido!");
@@ -110,30 +116,38 @@ public class Main {
 	}
 	
 	private static int everyMinute = 60;
-	private static int everyDay = 86400;	
+	
+	public static int everyDay = 86400;
+	public static Process pRam;
 	
 	private static void updateUsage() {
 		
 		if(everyDay == 86400){
 			
-			Date date = new Date();
-			Timestamp d = new Timestamp(date.getTime());
-
-			try {
-				System.out.println(Datetime.get() + "Backup " + d.toString());
-				String[] runRam = {"cp", "-R", "/home/server", "/home/backup/" + d.toString()};
-				Process pRam = Runtime.getRuntime().exec(runRam);
-				pRam.getInputStream();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			Server.backUp();
 			
-			everyDay = 0;
 		}
 		everyDay++;
 		
+		if(pRam != null){
+			try {
+				pRam.waitFor();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println(Datetime.get() + "Backup completado!");
+			pRam.destroy();
+			pRam.destroyForcibly();
+			pRam = null;
+			
+			Server.freeRam();
+			
+			System.gc();
+		}
+		
 		if(everyMinute == 60){
 			try {
+				System.gc();
 				String[] runRam = {"sh", "ram.sh"};
 				Process pRam = Runtime.getRuntime().exec(runRam);
 				BufferedReader stdInputRam = new BufferedReader(new InputStreamReader(pRam.getInputStream()));
