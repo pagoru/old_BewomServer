@@ -3,7 +3,6 @@ package es.bewom;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +12,6 @@ import es.bewom.commands.CommandStart;
 import es.bewom.commands.CommandStop;
 import es.bewom.commands.CommandBack;
 import es.bewom.commands.CommandExit;
-import es.bewom.commands.CommandFree;
 import es.bewom.commands.Commands;
 import es.bewom.util.Datetime;
 import es.bewom.util.mysql.MySQL;
@@ -43,7 +41,6 @@ public class Main {
 		Commands.registerCommand(new CommandExit());
 		Commands.registerCommand(new CommandStart());
 		Commands.registerCommand(new CommandStop());
-		Commands.registerCommand(new CommandFree());
 		Commands.registerCommand(new CommandBack());
 		
 		System.gc();
@@ -116,34 +113,14 @@ public class Main {
 	}
 	
 	private static int everyMinute = 60;
-	
 	public static int everyDay = 86400;
-	public static Process pRam;
 	
 	private static void updateUsage() {
 		
 		if(everyDay == 86400){
-			
 			Server.backUp();
-			
 		}
 		everyDay++;
-		
-		if(pRam != null){
-			try {
-				pRam.waitFor();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			System.out.println(Datetime.get() + "Backup completado!");
-			pRam.destroy();
-			pRam.destroyForcibly();
-			pRam = null;
-			
-			Server.freeRam();
-			
-			System.gc();
-		}
 		
 		if(everyMinute == 60){
 			try {
